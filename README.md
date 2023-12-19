@@ -1,5 +1,7 @@
 # MostDB
 
+MOST: Model-Based Compression with Outlier Storage for Time Series Data
+
 ### I. Requirements
 1. InfluxDB v2, both client and server
 2. OpenJDK v11
@@ -43,3 +45,4 @@ Then you can use MostDB in other maven projects.
 
 ### Attention
 This is a prototype implementation. We are still working on code refining.
+
