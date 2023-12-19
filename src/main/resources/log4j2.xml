@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d [%t] %-5p %c:%L - %m%n" />
+	</Console>
+
+    <RollingFile name="RollingFile" filename="${sys:user.home}/logs/mostdb/mostdb.log" filePattern="${sys:user.home}/logs/mostdb/%d{YYYY-MM-dd-HH-mm-ss}.log">
+      <PatternLayout pattern="%d [%t] %-5p %c:%L - %m%n" />
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10 MB" />
+      </Policies>
+      <DefaultRolloverStrategy max="20" />
+    </RollingFile>
+  </Appenders>
+  
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="RollingFile" />
+    </Root>
+  </Loggers>
+  
+</Configuration>
