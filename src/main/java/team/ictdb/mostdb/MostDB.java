@@ -10,6 +10,7 @@ import com.influxdb.client.InfluxDBClientFactory;
 
 import team.ictdb.mostdb.insert.Buffer;
 import team.ictdb.mostdb.query.Query;
+import team.ictdb.mostdb.query.TransformedQuery;
 import team.ictdb.mostdb.schema.Schema;
 
 public class MostDB {
@@ -23,6 +24,20 @@ public class MostDB {
   private String bucket = "mostdb";
   private char[] token = ("O3alk2txpszzqW4i7n51Dy3KBCLdx6XpRdd1DKJFG-"
       + "9NWy9XXWktH7hwjyMfP6dEgWPcMtBUtySyeiLhKYOUDA==").toCharArray();
+  
+  static {
+    String ext = null;
+    String osName = System.getProperty("os.name");
+    if (osName.toLowerCase().startsWith("win")) {
+      ext = "dll";
+    } else if (osName.toLowerCase().startsWith("mac")) {
+      ext = "dylib";
+    } else {
+      ext = "so";
+    }
+    System.load("/usr/local/lib/libmostdb_core."+ext); // Maybe some other path
+    LOGGER.info("libmostdb_core."+ext+" loaded.");
+  }
   
   public static class Row {
     public long timestamp;
@@ -112,7 +127,8 @@ public class MostDB {
   }
   
   public void query(Query query) throws Exception {
-    // TODO
+    TransformedQuery tq = query.transform();
+    tq.execute();
   }
   
 }

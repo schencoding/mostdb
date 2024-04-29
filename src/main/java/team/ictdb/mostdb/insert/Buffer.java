@@ -27,20 +27,6 @@ public class Buffer {
   private static ThreadPoolExecutor threadPool;
   private static Method directByteBufferAddressMethod;
   
-  static {
-    String ext = null;
-    String osName = System.getProperty("os.name");
-    if (osName.toLowerCase().startsWith("win")) {
-      ext = "dll";
-    } else if (osName.toLowerCase().startsWith("mac")) {
-      ext = "dylib";
-    } else {
-      ext = "so";
-    }
-    System.load("/usr/local/lib/libmostdb_core."+ext);
-    LOGGER.info("libmostdb_core."+ext+" loaded.");
-  }
-  
   public static void prepare() {
     BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>();
     threadPool = new ThreadPoolExecutor(
@@ -76,6 +62,7 @@ public class Buffer {
   
   private final String seriesID;
   private final Schema schema;
+  private final float errorBound;
   
   public Schema getSchema() { return schema; }
   
@@ -98,6 +85,7 @@ public class Buffer {
     builder.append(",").append(measName);
     this.seriesID = builder.toString();
     this.schema = Schema.tables.get(tableName);
+    this.errorBound = schema.getErrorBound()[schema.getMeasId(measName)];
     this.page = ByteBuffer.allocateDirect(MEMTABLE * CAPACITY * LINE_SIZE);
     this.page.order(ByteOrder.nativeOrder());
     this.pageAddr = (long)directByteBufferAddressMethod.invoke(page);
@@ -152,7 +140,8 @@ public class Buffer {
     public void run() {
       long inputAddr = pageAddr + memTableIndex * CAPACITY * LINE_SIZE;
       long outputAddr = resultAddr + memTableIndex * RESULT_SZ;
-      most(schema.globalStart, schema.gap, inputAddr, outputAddr, lineCount);
+      most(schema.globalStart, schema.gap, schema.isAbsoluteError(),
+          errorBound, inputAddr, outputAddr, lineCount);
       LOGGER.debug(seriesID+" "+memTableIndex);
       // TODO: to influxDB
       flushing[memTableIndex].elem = false;
@@ -161,8 +150,8 @@ public class Buffer {
       }
     }
     
-    public native void most(long globalStart, int gap, long inputAddr, 
-        long outputAddr, int lineCount);
+    public native void most(long globalStart, int gap, boolean absErr, 
+        float errBound, long inputAddr, long outputAddr, int lineCount);
   }
   
   static class VolatileBool {

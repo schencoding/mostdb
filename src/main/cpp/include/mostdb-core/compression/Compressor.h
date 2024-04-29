@@ -5,11 +5,11 @@
 
 namespace most {
 
+namespace cmpr {
+
 using time_t = uint64_t;
 using time_diff_t = int32_t;
 using value_t = double;
-
-namespace cmpr {
 
 struct TVPair {
   time_t t;

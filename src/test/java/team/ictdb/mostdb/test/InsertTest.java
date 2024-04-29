@@ -26,6 +26,7 @@ public class InsertTest {
         true, false
         );
     MostDB.instance().createTable("naivetable", schema);
+    Schema.tables.get("naivetable").globalStart = 10000;
     
     String[][] tagCombinations = new String[][] {
       new String[] {"tv11", "tv21"}, new String[] {"tv11", "tv22"},
@@ -53,6 +54,7 @@ public class InsertTest {
         true, false
         );
     MostDB.instance().createTable("bulktable", schema);
+    Schema.tables.get("bulktable").globalStart = 10000;
     
     String[][] tagCombinations = new String[][] {
       new String[] {"tv11", "tv21"}, new String[] {"tv11", "tv22"},

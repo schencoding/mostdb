@@ -31,7 +31,7 @@ public class Schema {
   private final boolean timestampRegular;
   private final boolean absoluteError;
   
-  public long globalStart = -1;
+  public long globalStart = 0;
   public int gap = 1; // used in regular-timestamp case
   
   // not stored
@@ -60,6 +60,12 @@ public class Schema {
   public boolean isAbsoluteError() { return absoluteError; }
   public int getTagId(String name) { return tagName2Id.get(name); }
   public int getMeasId(String name) { return measName2Id.get(name); }
+  public boolean isTagNameExists(String name) { 
+    return tagName2Id.containsKey(name); 
+  }
+  public boolean isMeasNameExists(String name) { 
+    return measName2Id.containsKey(name); 
+  }
   
   public static void loadMeta() throws IOException {
     LOGGER.info("Loading meta data...");

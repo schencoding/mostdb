@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     team_ictdb_mostdb_insert_Buffer_AsyncFlush
  * Method:    most
- * Signature: (JIJJI)V
+ * Signature: (JIZFJJI)V
  */
 JNIEXPORT void JNICALL Java_team_ictdb_mostdb_insert_Buffer_00024AsyncFlush_most
-  (JNIEnv *, jobject, jlong, jint, jlong, jlong, jint);
+  (JNIEnv *, jobject, jlong, jint, jboolean, jfloat, jlong, jlong, jint);
 
 #ifdef __cplusplus
 }
